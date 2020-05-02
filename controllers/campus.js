@@ -11,7 +11,6 @@ const allCampuses = (req, res) => {
 
 // create campus
 const createCampus = (req, res) => {
-  console.log(req.user.userId);
   Campus.findOne({ name: req.body.name }, (err, campus) => {
     if (err) return res.json({ err });
     if (campus)
@@ -78,10 +77,11 @@ const createCampus = (req, res) => {
 const joinCampus = (req, res) => {
   console.log(req.user);
   Campus.findById(req.params.id, (err, campus) => {
-    if (err) return res.json({ err });
-    if (!campus) return res.json({ message: "campus not found" });
+    if (err) return res.json({ err, message: "error", success: false });
+    if (!campus)
+      return res.json({ success: false, message: "campus not found" });
     if (campus.people.includes(req.user.userId))
-      return res.json({ message: "already you are member" });
+      return res.json({ success: false, message: "already you are member" });
     if (!campus.people.includes(req.user.userId)) {
       Campus.findByIdAndUpdate(
         req.params.id,
@@ -96,7 +96,12 @@ const joinCampus = (req, res) => {
                   { $push: { membersId: req.user.userId } },
                   { new: true },
                   (err, updatedChannel) => {
-                    if (err) return res.json({ err });
+                    if (err)
+                      return res.json({
+                        err,
+                        message: "error",
+                        success: false,
+                      });
                     User.findByIdAndUpdate(
                       req.user.userId,
                       { $push: { campusesId: updatedCampus._id } },
