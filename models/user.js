@@ -16,6 +16,12 @@ var userSchema = new Schema(
     dp: {
       type: String,
     },
+    campusesId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Campus",
+      },
+    ],
   },
   { timestamps: true }
 );

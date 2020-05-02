@@ -8,7 +8,7 @@ var mongoose = require("mongoose");
 var cors = require("cors");
 
 // connect mongo
-var mongoServer = "mongodb://localhost/goggle-api";
+var mongoServer = "mongodb://localhost/fomo-api";
 mongoose.connect(
   mongoServer,
   {
@@ -34,6 +34,8 @@ app.set("view engine", "ejs");
 // handling routes
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var campusRouter = require("./routes/campus");
+var channelsRouter = require("./routes/channels");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -43,7 +45,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(passport.initialize());
 require("./modules/passport");
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/campus", campusRouter);
+app.use("/api/v1/channels", channelsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
